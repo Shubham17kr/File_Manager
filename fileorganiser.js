@@ -23,7 +23,20 @@ if(folderexist)
     {
         let ext=path.extname(files[i])
         let nameoffolder= givefoldername(ext)
-        console.log("ext--"+ ext + "   type---"+ nameoffolder)
+        // console.log("ext--"+ ext + "   type---"+ nameoffolder)
+
+        let pathOfFolder=path.join(folderpath,nameoffolder)
+        let exist=fss.existsSync(pathOfFolder)
+        if(exist)
+        {
+        moveFile(folderpath,pathOfFolder,files[i])
+
+        }
+        else{
+            fss.mkdirSync(pathOfFolder)
+            moveFile(folderpath,pathOfFolder,files[i])
+        }
+
     }
 }
 else{
@@ -44,4 +57,14 @@ function givefoldername(ext)
         }
     }
     return 'other'
+}
+
+
+function moveFile(folderpath,pathOfFolder,filename)
+{
+    let source=path.join(folderpath,filename)
+    let destination=path.join(pathOfFolder,filename)
+
+    fss.copyFileSync(source,destination)
+    fss.unlinkSync(source)
 }
